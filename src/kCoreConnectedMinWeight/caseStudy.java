@@ -55,7 +55,7 @@ public class caseStudy {
         ArrayList<String> queryNodes = new ArrayList<String>();
         try{
             
-        BufferedReader br = new BufferedReader(new FileReader("E:\\CODING FILES\\JavaCode\\kCoreConnectedMinWeight\\caseStudyInput\\dec22jiawei7.txt"));//dblp min vertex = 0 which starts from 0
+        BufferedReader br = new BufferedReader(new FileReader("E:\\CODING FILES\\JavaCode\\kCoreConnectedMinWeight\\caseStudyInput\\id.txt"));//dblp min vertex = 0 which starts from 0
         //BufferedReader br = new BufferedReader(new FileReader("E:\\CODING FILES\\JavaCode\\dblpSax\\output\\running\\newIndexFruitFly.txt"));//dblp min vertex = 0 which starts from 0
         
         int count = 0;

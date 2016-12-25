@@ -175,26 +175,28 @@ public class kCoreConnectedMinWeight {
             bfs.add(queryNode);
             hs.add(queryNode);
         }
-
-        for(int i = 0; i < 10; i++){
+        // 1-hop
+        for(int i = 0; i < 1; i++){
             int size = bfs.size();
             while(size != 0){
                 String node = bfs.poll();
                 ArrayList<NodeNeighbour> al = hm.get(node);
-                for(NodeNeighbour nb : al){
-                    if((coreTable[Integer.parseInt(nb.nodeIndex)] >= queryCore)&&(!hs.contains(nb.nodeIndex))&&(nb.weight<0.2)){
-                        result.add(Integer.parseInt(nb.nodeIndex));
-                        hs.add(nb.nodeIndex);
-                        bfs.add(nb.nodeIndex);// forget first
+                if(al!=null){ // if not, will have the null pointer exception
+                    for(NodeNeighbour nb : al){
+                        if((coreTable[Integer.parseInt(nb.nodeIndex)] >= queryCore)&&(!hs.contains(nb.nodeIndex))&&(nb.weight<=1)){
+                            result.add(Integer.parseInt(nb.nodeIndex));
+                            hs.add(nb.nodeIndex);
+                            bfs.add(nb.nodeIndex);// forget first
+                        }
                     }
                 }
                 size--;
             }
         }
         
-//        for (int i : result){
-//            System.out.println(i);
-//        }
+        for (int i : result){
+            System.out.println(i);
+        }
         return result;
     }
     
@@ -373,7 +375,7 @@ public class kCoreConnectedMinWeight {
         
         int initialConnectedVertexSize = connectedSubGraph.size();
         
-        System.out.println("Finish finding the connected larger than core  graph");
+        System.out.println("Finish finding the connected larger than core graph");
         System.out.println("the connected larger than core graph size: " + initialConnectedVertexSize);
         
         System.out.println("========================");
@@ -405,7 +407,14 @@ public class kCoreConnectedMinWeight {
             }
         }
         
-        
+        // Dec 23 added
+        System.out.println("*****************************");
+        System.out.println("connectedSubGraphWeightSum: " + connectedSubGraphWeightSum);
+        for(Integer nodeConnected : connectedSubGraph){
+            System.out.println(nodeConnected);
+        }
+        System.out.println("*****************************");
+        // Dec 23 added
         
         HashSet<String> hs =  new HashSet<String>();
         for(String qn : queryNodes)
@@ -539,6 +548,15 @@ public class kCoreConnectedMinWeight {
                 System.out.println("Finish the " + iterationTimesForOutput + "th core graph size: " + connectedSubGraph.size());
                 System.out.println("========================");
                 iterationTimesForOutput++;
+                
+                // Dec 23 added
+                if(connectedSubGraph.size()<40){
+                    System.out.println("connectedSubGraph.size(): " + connectedSubGraph.size());
+                    for (Integer i : connectedSubGraph){
+                        System.out.println(i);
+                    }
+                }
+             // Dec 23 added
                 
 //for the second test to get the 10 nodes
 //                if(connectedSubGraph.size()<12){
@@ -818,18 +836,21 @@ public class kCoreConnectedMinWeight {
         // "16680" "18211" -- Jiawei Yizhou
         // "16730" "18210" Haixun wang; Wei fan
         // "16681" "1201845" -- Laks; Hosagrahar Visvesvaraya Jagadish
-        String[] queryNodes = {"16680", "18211"};//fix k =2
+        //  "1768" -- Jeffrey Xu Yu  "16876"?
+        // "17086" -- Divesh Srivastava
+        // plus one not minus one
+        String[] queryNodes = {"16680", "16838", "16631", "17678", "16713"};//fix k =2
         //String[] queryNodes = {"32240"};//fix k =2
-        int queryCore = 6;//vary
+        int queryCore = 4;//vary
         long startTime   = System.currentTimeMillis();
         for(int time = 0; time < 1; time++){
             int resultCore = run.getMaxCore(hm);
             System.out.println("MaxCore: " + resultCore);
-            System.out.println("Finish finding the max -core, not connected larger than core  graph");
-            ArrayList<Integer> vertexLargerCoreList = run.getVertexLargerCore(queryCore);
-            // ArrayList<Integer> vertexLargerCoreList = run.bfsfour(queryCore, hm, queryNodes);
+            System.out.println("Finish finding the max core, not connected larger than core graph");
+            // ArrayList<Integer> vertexLargerCoreList = run.getVertexLargerCore(queryCore);
+            ArrayList<Integer> vertexLargerCoreList = run.bfsfour(queryCore, hm, queryNodes);
 
-            System.out.println("not connected larger than core  graph size: " + vertexLargerCoreList.size());
+            System.out.println("not connected larger than core graph size: " + vertexLargerCoreList.size());
             System.out.println("========================");
               ArrayList<Integer> result = run.getSubGraph(vertexLargerCoreList, hm, queryNodes, queryCore);
               System.out.println("The subgraph nodes: ");
